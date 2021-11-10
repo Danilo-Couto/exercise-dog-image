@@ -1,30 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={ logo } className="App-logo" alt="logo" />
-        <p>
-          Edit
-          <code>
-            src/App.js
-          </code>
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      dogs: '',
+    };
+  }
+
+  fetchdogs = () => {
+    fetch("https://dog.ceo/api/breeds/image/random")
+      .then(response => response.json())
+      .then(results => {
+
+      this.setState({
+        dogs: results
+      })
+    })
+  }
+
+  componentDidMount() {
+    this.fetchdogs();
+  }
+
+  render() {
+    const { dogs } = this.state;
+    
+    if (dogs === '') {
+      console.log('loading')
+      return 'LOADING...'    
+    }
+    return (
+      <div>
+        <h1>
+          Dogs
+        </h1>
+      <div>
+        <img className='img'
+          src={dogs.message}
+          alt='misterious dog'
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      </img>
+      </div>
+        <button
+          type='button'
+          onClick={this.fetchdogs}
+        >
+          Próximo dog
+        </button>
+      </div>
+    );
+  }
 }
 
 export default App;
